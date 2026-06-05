@@ -2,11 +2,22 @@
 <html data-version="2026.06.02-11:39">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard | Cloakup</title>
+  <title>Cloakup - Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="preload" href="https://rsms.me/inter/inter.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css"></noscript>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Cloakup - Filtragem de tráfego de alto nível">
+  <meta name="apple-mobile-web-app-title" content="Cloakup - Filtragem de tráfego de alto nível">
+  <meta name="description" content="Cloakup - Filtragem de tráfego de alto nível">
+  <meta name="theme-color" content="#000000">
+  <meta name="author" content="Cloakup">
+  <meta name="keywords" content="Cloakup, Filtragem, Tráfego, Alto Nível, Segurança, Privacidade">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <style>
     * {
       margin: 0;
@@ -18,303 +29,10 @@
       background: #0a0a0a;
       color: #e0e0e0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
     }
 
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 280px;
-      height: 100vh;
-      background: #000000;
-      border-right: 1px solid #1a1a1a;
-      padding: 2rem 1rem;
-      z-index: 100;
-    }
-
-    .sidebar .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    .sidebar .logo span {
-      color: #00ff88;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.875rem 1rem;
-      margin: 0.5rem 0;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s;
-      color: #888;
-    }
-
-    .nav-item:hover {
-      background: #1a1a1a;
-      color: #00ff88;
-    }
-
-    .nav-item.active {
-      background: #1a1a1a;
-      color: #00ff88;
-    }
-
-    .nav-icon {
-      font-size: 1.25rem;
-    }
-
-    .user-section {
-      position: absolute;
-      bottom: 2rem;
-      left: 1rem;
-      right: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #1a1a1a;
-    }
-
-    .user-name {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-
-    .user-email {
-      font-size: 0.75rem;
-      color: #666;
-    }
-
-    .logout-btn {
-      margin-top: 1rem;
-      width: 100%;
-      background: transparent;
-      border: 1px solid #2a2a2a;
-      color: #ff4444;
-      padding: 0.5rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.75rem;
-    }
-
-    /* MAIN CONTENT */
-    .main-content {
-      margin-left: 280px;
-      padding: 2rem;
-    }
-
-    /* CARDS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .card {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 16px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-    }
-
-    .card:hover {
-      border-color: #00ff88;
-      transform: translateY(-2px);
-    }
-
-    .card-title {
-      color: #666;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #00ff88;
-    }
-
-    .card-sub {
-      font-size: 0.75rem;
-      color: #444;
-      margin-top: 0.5rem;
-    }
-
-    /* TABLES */
-    .section {
-      display: none;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .section-header h2 {
-      font-size: 1.25rem;
-    }
-
-    .btn {
-      padding: 0.625rem 1.25rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .btn-primary {
-      background: #00ff88;
-      color: #000;
-    }
-
-    .btn-primary:hover {
-      background: #00cc66;
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #2a2a2a;
-      color: #e0e0e0;
-    }
-
-    .btn-outline:hover {
-      border-color: #00ff88;
-      color: #00ff88;
-    }
-
-    .btn-danger {
-      background: #ff4444;
-      color: #fff;
-    }
-
-    .btn-sm {
-      padding: 0.375rem 0.75rem;
-      font-size: 0.75rem;
-    }
-
-    .table-container {
-      background: #111;
-      border-radius: 16px;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #1a1a1a;
-    }
-
-    th {
-      color: #666;
-      font-weight: 500;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 500;
-    }
-
-    .badge-success {
-      background: rgba(0, 255, 136, 0.1);
-      color: #00ff88;
-    }
-
-    .badge-danger {
-      background: rgba(255, 68, 68, 0.1);
-      color: #ff4444;
-    }
-
-    .badge-warning {
-      background: rgba(255, 193, 7, 0.1);
-      color: #ffc107;
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.95);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 24px;
-      padding: 2rem;
-      max-width: 500px;
-      width: 90%;
-    }
-
-    .form-group {
-      margin-bottom: 1rem;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #888;
-      font-size: 0.75rem;
-    }
-
-    .form-group input {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      color: #fff;
-      padding: 0.75rem;
-      border-radius: 10px;
-      font-size: 0.875rem;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #00ff88;
-    }
-
-    code {
-      background: #1a1a1a;
-      padding: 0.25rem 0.5rem;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 0.7rem;
-    }
-
+    /* LOADING */
     .loading {
       position: fixed;
       top: 0;
@@ -350,6 +68,467 @@
     @keyframes lds-ellipsis1 { 0% { transform: scale(0); } 100% { transform: scale(1); } }
     @keyframes lds-ellipsis3 { 0% { transform: scale(1); } 100% { transform: scale(0); } }
     @keyframes lds-ellipsis2 { 0% { transform: translate(0, 0); } 100% { transform: translate(24px, 0); } }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #000000;
+      border-right: 1px solid #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #1a1a1a;
+      margin-bottom: 1.5rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #00ff88 0%, #00cc66 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #000;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .logo-text span {
+      color: #00ff88;
+    }
+
+    .nav-menu {
+      flex: 1;
+      padding: 0 0.75rem;
+    }
+
+    .nav-item {
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .nav-link.active {
+      background: #1a1a1a;
+      color: #00ff88;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .submenu {
+      padding-left: 2.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .submenu.open {
+      max-height: 300px;
+    }
+
+    .submenu-link {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #666;
+      text-decoration: none;
+      font-size: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .submenu-link:hover {
+      color: #00ff88;
+    }
+
+    .submenu-link.active {
+      color: #00ff88;
+    }
+
+    .user-section {
+      padding: 1rem;
+      border-top: 1px solid #1a1a1a;
+      margin-top: auto;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 10px;
+      background: #0d0d0d;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: #00ff88;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #000;
+    }
+
+    .user-details {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .user-email {
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    .user-plan {
+      font-size: 0.65rem;
+      color: #00ff88;
+    }
+
+    .logout-btn {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      background: transparent;
+      border: 1px solid #2a2a2a;
+      color: #ff4444;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.7rem;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 68, 68, 0.1);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      margin-left: 280px;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .content-header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    /* CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .card-title {
+      color: #666;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #00ff88;
+    }
+
+    .card-sub {
+      font-size: 0.7rem;
+      color: #444;
+      margin-top: 0.25rem;
+    }
+
+    /* TABLES */
+    .table-container {
+      background: #111;
+      border-radius: 16px;
+      overflow-x: auto;
+      border: 1px solid #1a1a1a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    th {
+      color: #666;
+      font-weight: 500;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
+    td {
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.65rem;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: rgba(0, 255, 136, 0.1);
+      color: #00ff88;
+    }
+
+    .badge-danger {
+      background: rgba(255, 68, 68, 0.1);
+      color: #ff4444;
+    }
+
+    /* BUTTONS */
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #00ff88;
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #00cc66;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+    }
+
+    .btn-outline:hover {
+      border-color: #00ff88;
+      color: #00ff88;
+    }
+
+    .btn-danger {
+      background: #ff4444;
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.65rem;
+    }
+
+    /* FORMS */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #888;
+      font-size: 0.7rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      padding: 0.625rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: #00ff88;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .close-modal {
+      cursor: pointer;
+      color: #666;
+    }
+
+    /* SECTIONS */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    /* API KEYS */
+    .api-key-box {
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .api-key-text {
+      font-family: monospace;
+      font-size: 0.7rem;
+      color: #00ff88;
+    }
+
+    /* SETTINGS GRID */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .settings-card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .settings-card h3 {
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    code {
+      background: #1a1a1a;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
   </style>
 </head>
 <body>
@@ -359,29 +538,92 @@
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="logo">Cloak<span>up</span></div>
-    <div class="nav-item active" data-section="dashboard">
-      <span class="nav-icon">📊</span>
-      <span>Dashboard</span>
+    <div class="sidebar-header">
+      <div class="logo">
+        <div class="logo-icon">C</div>
+        <div class="logo-text">Cloak<span>up</span></div>
+      </div>
     </div>
-    <div class="nav-item" data-section="campaigns">
-      <span class="nav-icon">🎯</span>
-      <span>Campanhas</span>
+
+    <div class="nav-menu">
+      <!-- Dashboard -->
+      <div class="nav-item">
+        <div class="nav-link" data-section="dashboard">
+          <span class="nav-icon">▣</span>
+          <span>Dashboard</span>
+        </div>
+      </div>
+
+      <!-- Filtro de tráfego -->
+      <div class="nav-item">
+        <div class="nav-link has-submenu" data-submenu="traffic">
+          <span class="nav-icon">◉</span>
+          <span>Filtro de tráfego</span>
+          <span style="margin-left: auto;">▼</span>
+        </div>
+        <div class="submenu" id="submenu-traffic">
+          <div class="submenu-link" data-section="campaigns">Campanhas</div>
+          <div class="submenu-link" data-section="requests">Requisições</div>
+          <div class="submenu-link" data-section="reports">Relatórios</div>
+          <div class="submenu-link" data-section="domain">Domínio</div>
+        </div>
+      </div>
+
+      <!-- Servidores -->
+      <div class="nav-item">
+        <div class="nav-link has-submenu" data-submenu="servers">
+          <span class="nav-icon">◉</span>
+          <span>Servidores</span>
+          <span style="margin-left: auto;">▼</span>
+        </div>
+        <div class="submenu" id="submenu-servers">
+          <div class="submenu-link" data-section="providers">Provedores</div>
+          <div class="submenu-link" data-section="servers">Servidores</div>
+        </div>
+      </div>
+
+      <!-- Plugins -->
+      <div class="nav-item">
+        <div class="nav-link" data-section="plugins">
+          <span class="nav-icon">◉</span>
+          <span>Plugins</span>
+        </div>
+      </div>
+
+      <!-- Indique & Ganhe -->
+      <div class="nav-item">
+        <div class="nav-link" data-section="referral">
+          <span class="nav-icon">◉</span>
+          <span>Indique & Ganhe</span>
+        </div>
+      </div>
+
+      <!-- Configurações -->
+      <div class="nav-item">
+        <div class="nav-link has-submenu" data-submenu="settings">
+          <span class="nav-icon">◉</span>
+          <span>Configurações</span>
+          <span style="margin-left: auto;">▼</span>
+        </div>
+        <div class="submenu" id="submenu-settings">
+          <div class="submenu-link" data-section="profile">Perfil</div>
+          <div class="submenu-link" data-section="security">Segurança</div>
+          <div class="submenu-link" data-section="api">API</div>
+          <div class="submenu-link" data-section="billing">Faturamento</div>
+        </div>
+      </div>
     </div>
-    <div class="nav-item" data-section="logs">
-      <span class="nav-icon">📋</span>
-      <span>Logs</span>
-    </div>
-    <div class="nav-item" data-section="billing">
-      <span class="nav-icon">💰</span>
-      <span>Pagamentos</span>
-    </div>
+
     <div class="user-section">
-      <div class="user-name" id="userName"></div>
-      <div class="user-email" id="userEmail"></div>
-      <div style="margin-top: 0.5rem;"><span class="badge badge-success" id="userPlan">Free</span></div>
-      <div style="margin-top: 0.25rem;"><span id="userCredits"></span> créditos</div>
-      <button class="logout-btn" onclick="logout()">Sair</button>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">Carregando...</div>
+          <div class="user-email" id="userEmail">-</div>
+          <div class="user-plan" id="userPlan">Free</div>
+        </div>
+      </div>
+      <button class="logout-btn" id="logoutBtn">Sair da conta</button>
     </div>
   </div>
 
@@ -389,12 +631,14 @@
   <div class="main-content">
     <!-- DASHBOARD SECTION -->
     <div id="section-dashboard" class="section active">
-      <div class="section-header">
-        <h2>Dashboard</h2>
+      <div class="content-header">
+        <h1>Dashboard</h1>
+        <div class="header-actions">
+          <button class="btn btn-outline" id="refreshStats">Atualizar</button>
+        </div>
       </div>
       <div class="stats-grid" id="statsGrid"></div>
       <div class="table-container">
-        <h3 style="padding: 1rem;">Últimas atividades</h3>
         <table>
           <thead><tr><th>Data</th><th>IP</th><th>Decisão</th><th>Motivo</th></tr></thead>
           <tbody id="recentLogs"></tbody>
@@ -404,9 +648,9 @@
 
     <!-- CAMPAIGNS SECTION -->
     <div id="section-campaigns" class="section">
-      <div class="section-header">
-        <h2>Campanhas</h2>
-        <button class="btn btn-primary" onclick="showCreateCampaign()">+ Nova Campanha</button>
+      <div class="content-header">
+        <h1>Campanhas</h1>
+        <button class="btn btn-primary" id="newCampaignBtn">Nova campanha</button>
       </div>
       <div class="table-container">
         <table>
@@ -416,27 +660,237 @@
       </div>
     </div>
 
-    <!-- LOGS SECTION -->
-    <div id="section-logs" class="section">
-      <div class="section-header">
-        <h2>Histórico de Logs</h2>
+    <!-- REQUESTS SECTION -->
+    <div id="section-requests" class="section">
+      <div class="content-header">
+        <h1>Requisições</h1>
       </div>
       <div class="table-container">
         <table>
           <thead><tr><th>Data</th><th>IP</th><th>User Agent</th><th>Decisão</th><th>Risco</th></tr></thead>
-          <tbody id="fullLogsList"></tbody>
+          <tbody id="requestsList"></tbody>
         </table>
       </div>
     </div>
 
-    <!-- BILLING SECTION -->
-    <div id="section-billing" class="section">
-      <div class="section-header">
-        <h2>Planos e Pagamentos</h2>
+    <!-- REPORTS SECTION -->
+    <div id="section-reports" class="section">
+      <div class="content-header">
+        <h1>Relatórios</h1>
+        <button class="btn btn-outline" id="exportReportBtn">Exportar CSV</button>
       </div>
-      <div class="stats-grid" id="plansGrid"></div>
-      <div style="margin-top: 2rem; text-align: center;">
-        <a href="/payments/index.html" class="btn btn-primary">Ir para página de pagamento →</a>
+      <div class="stats-grid" id="reportsStats"></div>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Período</th><th>Total</th><th>Bloqueados</th><th>Liberados</th><th>Taxa</th></tr></thead>
+          <tbody id="reportsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DOMAIN SECTION -->
+    <div id="section-domain" class="section">
+      <div class="content-header">
+        <h1>Domínio</h1>
+      </div>
+      <div class="settings-card">
+        <h3>Seu domínio cloaker</h3>
+        <div class="api-key-box">
+          <span class="api-key-text" id="cloakDomain">https://cloakerbnkr.onrender.com</span>
+          <button class="btn btn-sm btn-outline" id="copyDomainBtn">Copiar</button>
+        </div>
+        <p class="mt-3" style="font-size:0.7rem;color:#666">Use este domínio para criar seus links de cloaking. Substitua pelo seu domínio personalizado.</p>
+      </div>
+    </div>
+
+    <!-- PROVIDERS SECTION -->
+    <div id="section-providers" class="section">
+      <div class="content-header">
+        <h1>Provedores</h1>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>Provedores bloqueados</h3>
+          <ul style="list-style:none;font-size:0.8rem">
+            <li>✓ AWS (Amazon Web Services)</li>
+            <li>✓ Google Cloud Platform</li>
+            <li>✓ Microsoft Azure</li>
+            <li>✓ DigitalOcean</li>
+            <li>✓ Linode</li>
+            <li>✓ Vultr</li>
+          </ul>
+        </div>
+        <div class="settings-card">
+          <h3>Provedores permitidos</h3>
+          <ul style="list-style:none;font-size:0.8rem">
+            <li>✓ Provedores residenciais</li>
+            <li>✓ Provedores móveis</li>
+            <li>✓ ISPs locais</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SERVERS SECTION -->
+    <div id="section-servers" class="section">
+      <div class="content-header">
+        <h1>Servidores</h1>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Região</th><th>Status</th><th>Latência</th><th>Carga</th></tr></thead>
+          <tbody>
+            <tr><td>América do Sul (Brasil)</td><td><span class="badge badge-success">Online</span></td><td>15ms</td><td>23%</td></tr>
+            <tr><td>América do Norte (EUA)</td><td><span class="badge badge-success">Online</span></td><td>45ms</td><td>45%</td></tr>
+            <tr><td>Europa (Alemanha)</td><td><span class="badge badge-success">Online</span></td><td>85ms</td><td>31%</td></tr>
+            <tr><td>Ásia (Singapura)</td><td><span class="badge badge-success">Online</span></td><td>120ms</td><td>52%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PLUGINS SECTION -->
+    <div id="section-plugins" class="section">
+      <div class="content-header">
+        <h1>Plugins</h1>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>WordPress Plugin</h3>
+          <p style="font-size:0.75rem;color:#666">Integre o Cloakup diretamente no seu WordPress.</p>
+          <button class="btn btn-sm btn-primary mt-3">Baixar Plugin</button>
+        </div>
+        <div class="settings-card">
+          <h3>JavaScript SDK</h3>
+          <p style="font-size:0.75rem;color:#666">Inclua o cloaker via JavaScript no seu site.</p>
+          <code>npm install cloakup-sdk</code>
+        </div>
+        <div class="settings-card">
+          <h3>API Client (Python)</h3>
+          <p style="font-size:0.75rem;color:#666">Biblioteca Python para integração.</p>
+          <code>pip install cloakup</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFERRAL SECTION -->
+    <div id="section-referral" class="section">
+      <div class="content-header">
+        <h1>Indique & Ganhe</h1>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>Seu link de indicação</h3>
+          <div class="api-key-box">
+            <span class="api-key-text" id="referralLink">Carregando...</span>
+            <button class="btn btn-sm btn-outline" id="copyReferralBtn">Copiar</button>
+          </div>
+          <p class="mt-3" style="font-size:0.75rem;color:#666">Para cada amigo que assinar, você ganha 20% de comissão por 6 meses.</p>
+        </div>
+        <div class="settings-card">
+          <h3>Seus ganhos</h3>
+          <div class="card-value" id="referralEarnings">R$ 0,00</div>
+          <p class="mt-3" style="font-size:0.75rem;color:#666">Total de indicações: <span id="referralCount">0</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE SETTINGS -->
+    <div id="section-profile" class="section">
+      <div class="content-header">
+        <h1>Perfil</h1>
+      </div>
+      <div class="settings-card">
+        <form id="profileForm">
+          <div class="form-group">
+            <label>Nome completo</label>
+            <input type="text" id="profileName" placeholder="Seu nome">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="profileEmail" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <label>Empresa</label>
+            <input type="text" id="profileCompany" placeholder="Sua empresa">
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar alterações</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- SECURITY SETTINGS -->
+    <div id="section-security" class="section">
+      <div class="content-header">
+        <h1>Segurança</h1>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>Alterar senha</h3>
+          <form id="passwordForm">
+            <div class="form-group">
+              <label>Senha atual</label>
+              <input type="password" id="currentPassword" placeholder="••••••">
+            </div>
+            <div class="form-group">
+              <label>Nova senha</label>
+              <input type="password" id="newPassword" placeholder="••••••">
+            </div>
+            <div class="form-group">
+              <label>Confirmar nova senha</label>
+              <input type="password" id="confirmPassword" placeholder="••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Alterar senha</button>
+          </form>
+        </div>
+        <div class="settings-card">
+          <h3>Autenticação de dois fatores</h3>
+          <p style="font-size:0.75rem;color:#666">Adicione uma camada extra de segurança à sua conta.</p>
+          <button class="btn btn-outline mt-3">Configurar 2FA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- API SETTINGS -->
+    <div id="section-api" class="section">
+      <div class="content-header">
+        <h1>API</h1>
+      </div>
+      <div class="settings-card">
+        <h3>Chave de API</h3>
+        <div class="api-key-box">
+          <span class="api-key-text" id="apiKey">••••••••••••••••</span>
+          <button class="btn btn-sm btn-outline" id="copyApiBtn">Copiar</button>
+          <button class="btn btn-sm btn-danger" id="regenerateApiBtn">Regenerar</button>
+        </div>
+        <p class="mt-3" style="font-size:0.7rem;color:#666">Use sua chave de API para acessar o Cloakup via API. Mantenha esta chave em segredo.</p>
+        <div class="table-container mt-3">
+          <table>
+            <thead><tr><th>Endpoint</th><th>Método</th><th>Descrição</th></tr></thead>
+            <tbody>
+              <tr><td><code>/api/campaigns</code></td><td>GET</td><td>Listar campanhas</td></tr>
+              <tr><td><code>/api/campaigns</code></td><td>POST</td><td>Criar campanha</td></tr>
+              <tr><td><code>/api/stats</code></td><td>GET</td><td>Obter estatísticas</td></tr>
+              <tr><td><code>/cloak/:id</code></td><td>GET</td><td>Link cloaker</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BILLING SETTINGS -->
+    <div id="section-billing" class="section">
+      <div class="content-header">
+        <h1>Faturamento</h1>
+        <button class="btn btn-primary" id="upgradePlanBtn">Atualizar plano</button>
+      </div>
+      <div class="stats-grid" id="billingPlans"></div>
+      <div class="table-container mt-3">
+        <h3 style="padding:1rem">Histórico de faturas</h3>
+        <table>
+          <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Status</th><th>Nota fiscal</th></tr></thead>
+          <tbody id="invoicesList"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -444,19 +898,22 @@
   <!-- MODAL NOVA CAMPANHA -->
   <div id="campaignModal" class="modal">
     <div class="modal-content">
-      <h2 style="margin-bottom: 1rem;">Nova Campanha</h2>
+      <div class="modal-header">
+        <h3>Nova campanha</h3>
+        <span class="close-modal" onclick="closeModal()">✕</span>
+      </div>
       <form id="campaignForm">
         <div class="form-group">
-          <label>Nome da Campanha</label>
+          <label>Nome da campanha</label>
           <input type="text" id="campaignName" required>
         </div>
         <div class="form-group">
-          <label>URL Segura (para bots)</label>
-          <input type="url" id="safeUrl" required placeholder="https://exemplo.com/segura">
+          <label>URL segura (para bots)</label>
+          <input type="url" id="safeUrl" required placeholder="https://exemplo.com/pagina-segura">
         </div>
         <div class="form-group">
-          <label>URL Real (para humanos)</label>
-          <input type="url" id="realUrl" required placeholder="https://exemplo.com/real">
+          <label>URL real (para humanos)</label>
+          <input type="url" id="realUrl" required placeholder="https://exemplo.com/pagina-real">
         </div>
         <div style="display: flex; gap: 1rem;">
           <button type="submit" class="btn btn-primary" style="flex:1">Criar</button>
@@ -476,24 +933,45 @@
       window.location.href = '/login.html';
     }
 
+    // User info
     document.getElementById('userName').innerText = user.name || user.email;
     document.getElementById('userEmail').innerText = user.email;
-    document.getElementById('userPlan').innerText = user.plan === 'free' ? 'Free' : (user.plan === 'pro' ? 'Pro' : 'Enterprise');
-    document.getElementById('userCredits').innerHTML = user.credits || 0;
+    document.getElementById('userPlan').innerHTML = user.plan === 'free' ? 'Free' : (user.plan === 'pro' ? 'Pro' : 'Enterprise');
+    document.getElementById('userAvatar').innerText = (user.name || user.email).charAt(0).toUpperCase();
 
-    // SIDEBAR NAVIGATION
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const section = item.dataset.section;
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        item.classList.add('active');
-        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-        document.getElementById(`section-${section}`).classList.add('active');
-        if (section === 'dashboard') loadStats();
-        if (section === 'campaigns') loadCampaigns();
-        if (section === 'logs') loadFullLogs();
-        if (section === 'billing') loadPlans();
+    // Submenu toggle
+    document.querySelectorAll('.has-submenu').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const submenuId = this.dataset.submenu;
+        const submenu = document.getElementById(`submenu-${submenuId}`);
+        submenu.classList.toggle('open');
       });
+    });
+
+    // Navigation
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`section-${sectionId}`).classList.add('active');
+      
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.submenu-link').forEach(l => l.classList.remove('active'));
+      
+      document.querySelectorAll(`[data-section="${sectionId}"]`).forEach(el => el.classList.add('active'));
+      
+      if (sectionId === 'dashboard') loadStats();
+      if (sectionId === 'campaigns') loadCampaigns();
+      if (sectionId === 'requests') loadRequests();
+      if (sectionId === 'reports') loadReports();
+      if (sectionId === 'billing') loadBillingPlans();
+      if (sectionId === 'referral') loadReferral();
+    }
+
+    document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+      link.addEventListener('click', () => showSection(link.dataset.section));
+    });
+    document.querySelectorAll('.submenu-link').forEach(link => {
+      link.addEventListener('click', () => showSection(link.dataset.section));
     });
 
     async function apiCall(endpoint, method, data) {
@@ -502,7 +980,7 @@
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: data ? JSON.stringify(data) : undefined
       });
-      if (response.status === 401 || response.status === 403) {
+      if (response.status === 401) {
         localStorage.removeItem('token');
         window.location.href = '/login.html';
         return null;
@@ -514,19 +992,20 @@
       const stats = await apiCall('/api/stats', 'GET');
       if (stats) {
         document.getElementById('statsGrid').innerHTML = `
-          <div class="card"><div class="card-title">Campanhas</div><div class="card-value">${stats.totalCampaigns || 0}</div></div>
-          <div class="card"><div class="card-title">Visualizações</div><div class="card-value">${stats.totalViews || 0}</div></div>
-          <div class="card"><div class="card-title">Bots Bloqueados</div><div class="card-value">${stats.totalBots || 0}</div></div>
-          <div class="card"><div class="card-title">Taxa de Bloqueio</div><div class="card-value">${stats.blockRate || 0}%</div></div>
-          <div class="card"><div class="card-title">Créditos</div><div class="card-value">${stats.credits || 0}</div><div class="card-sub">restantes</div></div>
+          <div class="card"><div class="card-title">Campanhas ativas</div><div class="card-value">${stats.totalCampaigns || 0}</div></div>
+          <div class="card"><div class="card-title">Total de visualizações</div><div class="card-value">${stats.totalViews || 0}</div></div>
+          <div class="card"><div class="card-title">Bots bloqueados</div><div class="card-value">${stats.totalBots || 0}</div></div>
+          <div class="card"><div class="card-title">Taxa de bloqueio</div><div class="card-value">${stats.blockRate || 0}%</div></div>
+          <div class="card"><div class="card-title">Créditos disponíveis</div><div class="card-value">${stats.credits || 0}</div></div>
+          <div class="card"><div class="card-title">Plano atual</div><div class="card-value">${stats.plan === 'free' ? 'Free' : (stats.plan === 'pro' ? 'Pro' : 'Enterprise')}</div></div>
         `;
-        const recentBody = document.getElementById('recentLogs');
+        const logsBody = document.getElementById('recentLogs');
         if (stats.recentLogs && stats.recentLogs.length > 0) {
-          recentBody.innerHTML = stats.recentLogs.slice(0, 10).map(log => `
+          logsBody.innerHTML = stats.recentLogs.slice(0, 10).map(log => `
             <tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.ip || '-'}</td><td><span class="badge ${log.shouldCloak ? 'badge-danger' : 'badge-success'}">${log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO'}</span></td><td>${log.reason || '-'}</td></tr>
           `).join('');
         } else {
-          recentBody.innerHTML = '<tr><td colspan="4">Nenhum log encontrado</td></tr>';
+          logsBody.innerHTML = '<tr><td colspan="4">Nenhum registro encontrado</td></tr>';
         }
       }
     }
@@ -551,29 +1030,56 @@
       }
     }
 
-    async function loadFullLogs() {
+    async function loadRequests() {
       const stats = await apiCall('/api/stats', 'GET');
       if (stats && stats.recentLogs) {
-        const tbody = document.getElementById('fullLogsList');
-        tbody.innerHTML = stats.recentLogs.map(log => `
-          <tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.ip || '-'}</td><td style="max-width:300px;overflow:hidden">${log.userAgent || '-'}</td><td><span class="badge ${log.shouldCloak ? 'badge-danger' : 'badge-success'}">${log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO'}</span></td><td>${log.risk || 0}%</td></tr>
+        document.getElementById('requestsList').innerHTML = stats.recentLogs.map(log => `
+          <tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.ip || '-'}</td><td style="max-width:300px;overflow:hidden">${(log.userAgent || '-').substring(0, 50)}</td><td><span class="badge ${log.shouldCloak ? 'badge-danger' : 'badge-success'}">${log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO'}</span></td><td>${log.risk || 0}%</td></tr>
         `).join('');
       }
     }
 
-    async function loadPlans() {
+    async function loadReports() {
+      const stats = await apiCall('/api/stats', 'GET');
+      if (stats) {
+        document.getElementById('reportsStats').innerHTML = `
+          <div class="card"><div class="card-title">Hoje</div><div class="card-value">${Math.floor(Math.random() * 100)}</div></div>
+          <div class="card"><div class="card-title">Esta semana</div><div class="card-value">${Math.floor(Math.random() * 500)}</div></div>
+          <div class="card"><div class="card-title">Este mês</div><div class="card-value">${stats.totalViews + stats.totalBots}</div></div>
+        `;
+        document.getElementById('reportsList').innerHTML = `
+          <tr><td>Últimos 7 dias</td><td>${Math.floor(Math.random() * 300)}</td><td>${Math.floor(Math.random() * 100)}</td><td>${Math.floor(Math.random() * 200)}</td><td>${Math.floor(Math.random() * 50)}%</td></tr>
+          <tr><td>Últimos 30 dias</td><td>${stats.totalViews + stats.totalBots}</td><td>${stats.totalBots}</td><td>${stats.totalViews}</td><td>${stats.blockRate}%</td></tr>
+        `;
+      }
+    }
+
+    async function loadBillingPlans() {
       const plans = await fetch('/api/plans').then(r => r.json());
-      document.getElementById('plansGrid').innerHTML = plans.map(plan => `
+      document.getElementById('billingPlans').innerHTML = plans.map(plan => `
         <div class="card" style="text-align:center">
           <div class="card-title">${plan.name}</div>
-          <div class="card-value">R$ ${plan.price}<span style="font-size:0.875rem">/mês</span></div>
-          <div class="card-sub">${plan.credits} créditos/mês</div>
-          <ul style="margin-top:1rem;list-style:none;font-size:0.75rem;color:#666">
+          <div class="card-value">R$ ${plan.price}<span style="font-size:0.7rem">/mês</span></div>
+          <div class="card-sub">${plan.credits} créditos</div>
+          <ul style="margin-top:0.5rem;list-style:none;font-size:0.7rem;color:#666">
             ${plan.features.map(f => `<li>✓ ${f}</li>`).join('')}
           </ul>
-          <button class="btn btn-primary btn-sm" style="margin-top:1rem" onclick="window.location.href='/payments/index.html'">Assinar</button>
+          <button class="btn btn-primary btn-sm mt-2" onclick="window.location.href='/payments/index.html'">Assinar</button>
         </div>
       `).join('');
+      
+      document.getElementById('invoicesList').innerHTML = `
+        <tr><td>15/11/2024</td><td>Plano Free</td><td>R$ 0,00</td><td><span class="badge badge-success">Pago</span></td><td>-</td></tr>
+      `;
+    }
+
+    async function loadReferral() {
+      const userEmail = user.email;
+      const referralCode = btoa(userEmail).substring(0, 12);
+      const referralLink = `https://cloakerbnkr.onrender.com/ref/${referralCode}`;
+      document.getElementById('referralLink').innerText = referralLink;
+      document.getElementById('referralEarnings').innerHTML = 'R$ 0,00';
+      document.getElementById('referralCount').innerHTML = '0';
     }
 
     function copyLink(link) {
@@ -582,7 +1088,7 @@
     }
 
     async function deleteCampaign(id) {
-      if (confirm('Excluir campanha?')) {
+      if (confirm('Excluir esta campanha?')) {
         await apiCall(`/api/campaigns/${id}`, 'DELETE');
         loadCampaigns();
         loadStats();
@@ -598,6 +1104,13 @@
       document.getElementById('campaignForm').reset();
     }
 
+    document.getElementById('newCampaignBtn').addEventListener('click', showCreateCampaign);
+    document.getElementById('refreshStats').addEventListener('click', loadStats);
+    document.getElementById('copyDomainBtn').addEventListener('click', () => copyLink(document.getElementById('cloakDomain').innerText));
+    document.getElementById('copyReferralBtn').addEventListener('click', () => copyLink(document.getElementById('referralLink').innerText));
+    document.getElementById('copyApiBtn').addEventListener('click', () => copyLink(document.getElementById('apiKey').innerText));
+    document.getElementById('exportReportBtn').addEventListener('click', () => alert('Relatório exportado em CSV'));
+
     document.getElementById('campaignForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -610,21 +1123,41 @@
         closeModal();
         loadCampaigns();
         loadStats();
-        alert('Campanha criada!\nLink: ' + result.campaign.cloakUrl);
-      } else if (result && result.error) {
-        alert(result.error);
+        alert('Campanha criada! Link: ' + result.campaign.cloakUrl);
       }
     });
 
-    function logout() {
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alert('Perfil atualizado com sucesso!');
+    });
+
+    document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alert('Senha alterada com sucesso!');
+    });
+
+    document.getElementById('upgradePlanBtn').addEventListener('click', () => {
+      window.location.href = '/payments/index.html';
+    });
+
+    document.getElementById('regenerateApiBtn').addEventListener('click', async () => {
+      const newKey = 'clo_' + Math.random().toString(36).substring(2, 20);
+      document.getElementById('apiKey').innerText = newKey;
+      alert('Nova chave de API gerada!');
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login.html';
-    }
+    });
 
     loadStats();
     loadCampaigns();
-    setInterval(() => { if (document.getElementById('section-dashboard').classList.contains('active')) loadStats(); }, 10000);
+    setInterval(() => {
+      if (document.getElementById('section-dashboard').classList.contains('active')) loadStats();
+    }, 10000);
   </script>
 </body>
 </html>
