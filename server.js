@@ -13,13 +13,23 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'cloakup_secret_key_2024';
 
-// CONEXÃO POSTGRESQL - COLOQUE SUA STRING AQUI
-const pool = new Pool({
-  connectionString: 'postgresql://cloaker_db_user:kJTmzI74aNVzjvLHetCPFegRbPTTgMAE@dpg-d8hk90a8qa3s73diog4g-a.oregon-postgres.render.com/cloaker_db',
-  ssl: { rejectUnauthorized: false }
-});
+// CONFIGURAÇÃO CORRETA DO HELMET - PERMITE SCRIPTS INLINE
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
+}));
 
-app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
@@ -30,10 +40,17 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CRIAR TABELAS NO POSTGRESQL
+// CONEXÃO POSTGRESQL
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL || 'postgresql://cloaker_db_user:kJTmzI74aNVzjvLHetCPFegRbPTTgMAE@dpg-d8hk90a8qa3s73diog4g-a.oregon-postgres.render.com/cloaker_db',
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+// CRIAR TABELAS
 async function initDatabase() {
   try {
-    // Tabela de usuários
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id VARCHAR(255) PRIMARY KEY,
@@ -48,7 +65,6 @@ async function initDatabase() {
       )
     `);
 
-    // Tabela de campanhas
     await pool.query(`
       CREATE TABLE IF NOT EXISTS campaigns (
         id VARCHAR(255) PRIMARY KEY,
@@ -63,7 +79,6 @@ async function initDatabase() {
       )
     `);
 
-    // Tabela de logs
     await pool.query(`
       CREATE TABLE IF NOT EXISTS logs (
         id VARCHAR(255) PRIMARY KEY,
@@ -86,6 +101,7 @@ async function initDatabase() {
 
 initDatabase();
 
+// BOT PATTERNS
 const botPatterns = [
   { pattern: /googlebot/i, name: 'Googlebot', risk: 100 },
   { pattern: /bingbot/i, name: 'Bingbot', risk: 100 },
@@ -182,7 +198,7 @@ function isAdmin(req, res, next) {
   next();
 }
 
-// REGISTER
+// ROTAS DE AUTENTICAÇÃO
 app.post('/api/auth/register', async (req, res) => {
   const { email, password, name } = req.body;
   
@@ -222,7 +238,6 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// LOGIN
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   
@@ -303,7 +318,7 @@ app.get('/cloak/:campaignId', async (req, res) => {
   }
 });
 
-// CREATE CAMPAIGN
+// ROTAS DE CAMPANHA
 app.post('/api/campaigns', authenticateToken, async (req, res) => {
   const { name, safeUrl, realUrl } = req.body;
   
@@ -348,7 +363,6 @@ app.post('/api/campaigns', authenticateToken, async (req, res) => {
   }
 });
 
-// GET CAMPAIGNS
 app.get('/api/campaigns', authenticateToken, async (req, res) => {
   try {
     const result = await pool.query(
@@ -374,7 +388,6 @@ app.get('/api/campaigns', authenticateToken, async (req, res) => {
   }
 });
 
-// DELETE CAMPAIGN
 app.delete('/api/campaigns/:id', authenticateToken, async (req, res) => {
   try {
     await pool.query('DELETE FROM campaigns WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);
@@ -399,7 +412,7 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
     const user = userResult.rows[0];
     
     const logsResult = await pool.query(
-      'SELECT id, timestamp, ip, should_cloak, risk, reason FROM logs WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 20',
+      'SELECT timestamp, ip, should_cloak, risk, reason FROM logs WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 20',
       [req.user.id]
     );
     
@@ -427,7 +440,7 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
   }
 });
 
-// ADMIN - GET USERS
+// ROTAS ADMIN
 app.get('/api/admin/users', authenticateToken, isAdmin, async (req, res) => {
   try {
     const result = await pool.query('SELECT id, email, name, role, plan, credits, status, created_at FROM users');
@@ -438,7 +451,6 @@ app.get('/api/admin/users', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-// ADMIN - UPDATE USER
 app.put('/api/admin/users/:id', authenticateToken, isAdmin, async (req, res) => {
   const { plan, credits, status, role } = req.body;
   
@@ -453,7 +465,6 @@ app.put('/api/admin/users/:id', authenticateToken, isAdmin, async (req, res) => 
     if (status) { updates.push(`status = $${idx++}`); values.push(status); }
     if (role) { updates.push(`role = $${idx++}`); values.push(role); }
     
-    updates.push(`updated_at = CURRENT_TIMESTAMP`);
     query += updates.join(', ') + ` WHERE id = $${idx}`;
     values.push(req.params.id);
     
@@ -465,7 +476,6 @@ app.put('/api/admin/users/:id', authenticateToken, isAdmin, async (req, res) => 
   }
 });
 
-// ADMIN - DELETE USER
 app.delete('/api/admin/users/:id', authenticateToken, isAdmin, async (req, res) => {
   try {
     await pool.query('DELETE FROM logs WHERE user_id = $1', [req.params.id]);
@@ -478,7 +488,6 @@ app.delete('/api/admin/users/:id', authenticateToken, isAdmin, async (req, res) 
   }
 });
 
-// ADMIN - STATS
 app.get('/api/admin/stats', authenticateToken, isAdmin, async (req, res) => {
   try {
     const usersResult = await pool.query('SELECT COUNT(*) FROM users');
@@ -486,9 +495,7 @@ app.get('/api/admin/stats', authenticateToken, isAdmin, async (req, res) => {
     const logsResult = await pool.query('SELECT COUNT(*) FROM logs');
     const viewsResult = await pool.query('SELECT COALESCE(SUM(views), 0) as total_views, COALESCE(SUM(bot_views), 0) as total_bots FROM campaigns');
     
-    const usersByPlanResult = await pool.query(`
-      SELECT plan, COUNT(*) as count FROM users GROUP BY plan
-    `);
+    const usersByPlanResult = await pool.query(`SELECT plan, COUNT(*) as count FROM users GROUP BY plan`);
     
     const usersByPlan = { free: 0, pro: 0, enterprise: 0 };
     usersByPlanResult.rows.forEach(row => {
@@ -510,7 +517,6 @@ app.get('/api/admin/stats', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-// ADMIN - CAMPAIGNS
 app.get('/api/admin/campaigns', authenticateToken, isAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -526,14 +532,10 @@ app.get('/api/admin/campaigns', authenticateToken, isAdmin, async (req, res) => 
   }
 });
 
-// ADMIN - LOGS
 app.get('/api/admin/logs', authenticateToken, isAdmin, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
-    const result = await pool.query(
-      'SELECT * FROM logs ORDER BY timestamp DESC LIMIT $1',
-      [limit]
-    );
+    const result = await pool.query('SELECT * FROM logs ORDER BY timestamp DESC LIMIT $1', [limit]);
     res.json(result.rows);
   } catch(err) {
     console.error(err);
