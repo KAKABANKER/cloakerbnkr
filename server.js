@@ -13,7 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'cloakup_secret_key_2024';
 
-// CONFIGURAÇÃO CORRETA DO HELMET - PERMITE SCRIPTS INLINE
+// ADICIONE ESTA LINHA (resolve o erro do X-Forwarded-For)
+app.set('trust proxy', 1);
+
+// Ajuste o helmet para permitir inline scripts
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -24,8 +27,6 @@ app.use(helmet({
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
-      frameSrc: ["'none'"],
     },
   },
 }));
