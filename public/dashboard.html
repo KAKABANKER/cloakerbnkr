@@ -2,7 +2,7 @@
 <html data-version="2026.06.02-11:39">
 <head>
   <meta charset="UTF-8" />
-  <title>Pagamento | Cloakup</title>
+  <title>Dashboard | Cloakup</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://rsms.me/">
   <link rel="preload" href="https://rsms.me/inter/inter.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -18,106 +18,267 @@
       background: #0a0a0a;
       color: #e0e0e0;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      min-height: 100vh;
     }
 
-    .header {
-      background: #000;
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #000000;
+      border-right: 1px solid #1a1a1a;
+      padding: 2rem 1rem;
+      z-index: 100;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid #1a1a1a;
-      padding: 1rem 2rem;
     }
 
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
+    .sidebar .logo span {
+      color: #00ff88;
+    }
+
+    .nav-item {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      padding: 0.875rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #888;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .logo span {
+    .nav-item:hover {
+      background: #1a1a1a;
       color: #00ff88;
     }
 
-    .back-link {
+    .nav-item.active {
+      background: #1a1a1a;
       color: #00ff88;
-      text-decoration: none;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+    .nav-icon {
+      font-size: 1.25rem;
     }
 
-    .payment-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    .user-section {
+      position: absolute;
+      bottom: 2rem;
+      left: 1rem;
+      right: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #1a1a1a;
     }
 
-    @media (max-width: 768px) {
-      .payment-grid {
-        grid-template-columns: 1fr;
-      }
+    .user-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
     }
 
-    .plan-card {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 24px;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    .plan-card.featured {
-      border-color: #00ff88;
-      box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
-    }
-
-    .plan-name {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .plan-price {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #00ff88;
-      margin: 1rem 0;
-    }
-
-    .plan-price small {
-      font-size: 0.875rem;
+    .user-email {
+      font-size: 0.75rem;
       color: #666;
     }
 
-    .plan-features {
-      list-style: none;
-      margin: 1.5rem 0;
+    .logout-btn {
+      margin-top: 1rem;
+      width: 100%;
+      background: transparent;
+      border: 1px solid #2a2a2a;
+      color: #ff4444;
+      padding: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.75rem;
     }
 
-    .plan-features li {
-      padding: 0.5rem 0;
-      color: #888;
-      font-size: 0.875rem;
-    }
-
-    .payment-form {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 24px;
+    /* MAIN CONTENT */
+    .main-content {
+      margin-left: 280px;
       padding: 2rem;
     }
 
-    .payment-form h3 {
+    /* CARDS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .card:hover {
+      border-color: #00ff88;
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      color: #666;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #00ff88;
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      color: #444;
+      margin-top: 0.5rem;
+    }
+
+    /* TABLES */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1.5rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.25rem;
+    }
+
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: #00ff88;
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: #00cc66;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+    }
+
+    .btn-outline:hover {
+      border-color: #00ff88;
+      color: #00ff88;
+    }
+
+    .btn-danger {
+      background: #ff4444;
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .table-container {
+      background: #111;
+      border-radius: 16px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    th {
+      color: #666;
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .badge-success {
+      background: rgba(0, 255, 136, 0.1);
+      color: #00ff88;
+    }
+
+    .badge-danger {
+      background: rgba(255, 68, 68, 0.1);
+      color: #ff4444;
+    }
+
+    .badge-warning {
+      background: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 24px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
     }
 
     .form-group {
@@ -136,8 +297,8 @@
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
       color: #fff;
-      padding: 0.875rem;
-      border-radius: 12px;
+      padding: 0.75rem;
+      border-radius: 10px;
       font-size: 0.875rem;
     }
 
@@ -146,198 +307,324 @@
       border-color: #00ff88;
     }
 
-    .btn {
-      width: 100%;
-      background: #00ff88;
-      border: none;
-      color: #000;
-      padding: 1rem;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      margin-top: 1rem;
-      transition: all 0.3s;
-    }
-
-    .btn:hover {
-      background: #00cc66;
-      transform: translateY(-2px);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
+    code {
+      background: #1a1a1a;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-family: monospace;
       font-size: 0.7rem;
-      background: rgba(0, 255, 136, 0.1);
-      color: #00ff88;
-      margin-bottom: 1rem;
     }
+
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .lds-ellipsis {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-ellipsis div {
+      position: absolute;
+      top: 33px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #00ff88;
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .lds-ellipsis div:nth-child(1) { left: 8px; animation: lds-ellipsis1 0.6s infinite; }
+    .lds-ellipsis div:nth-child(2) { left: 8px; animation: lds-ellipsis2 0.6s infinite; }
+    .lds-ellipsis div:nth-child(3) { left: 32px; animation: lds-ellipsis2 0.6s infinite; }
+    .lds-ellipsis div:nth-child(4) { left: 56px; animation: lds-ellipsis3 0.6s infinite; }
+    @keyframes lds-ellipsis1 { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    @keyframes lds-ellipsis3 { 0% { transform: scale(1); } 100% { transform: scale(0); } }
+    @keyframes lds-ellipsis2 { 0% { transform: translate(0, 0); } 100% { transform: translate(24px, 0); } }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="header-content">
-      <div class="logo">Cloak<span>up</span></div>
-      <a href="/dashboard.html" class="back-link">← Voltar ao Dashboard</a>
+  <div class="loading" id="preloading">
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">Cloak<span>up</span></div>
+    <div class="nav-item active" data-section="dashboard">
+      <span class="nav-icon">📊</span>
+      <span>Dashboard</span>
+    </div>
+    <div class="nav-item" data-section="campaigns">
+      <span class="nav-icon">🎯</span>
+      <span>Campanhas</span>
+    </div>
+    <div class="nav-item" data-section="logs">
+      <span class="nav-icon">📋</span>
+      <span>Logs</span>
+    </div>
+    <div class="nav-item" data-section="billing">
+      <span class="nav-icon">💰</span>
+      <span>Pagamentos</span>
+    </div>
+    <div class="user-section">
+      <div class="user-name" id="userName"></div>
+      <div class="user-email" id="userEmail"></div>
+      <div style="margin-top: 0.5rem;"><span class="badge badge-success" id="userPlan">Free</span></div>
+      <div style="margin-top: 0.25rem;"><span id="userCredits"></span> créditos</div>
+      <button class="logout-btn" onclick="logout()">Sair</button>
     </div>
   </div>
 
-  <div class="container">
-    <h1 style="margin-bottom: 0.5rem;">Escolha seu plano</h1>
-    <p style="color: #666; margin-bottom: 2rem;">Assine e proteja seu tráfego com inteligência</p>
-
-    <div class="payment-grid">
-      <!-- PLANOS -->
-      <div>
-        <div class="plan-card" id="planFree">
-          <div class="badge">Atual</div>
-          <div class="plan-name">Free</div>
-          <div class="plan-price">R$ 0<small>/mês</small></div>
-          <ul class="plan-features">
-            <li>✓ 1 campanha ativa</li>
-            <li>✓ 100 visualizações/mês</li>
-            <li>✓ Detecção de bots básica</li>
-          </ul>
-          <button class="btn" disabled style="opacity:0.5">Plano atual</button>
-        </div>
-
-        <div class="plan-card featured" id="planPro" style="margin-top: 1rem;">
-          <div class="badge">Recomendado</div>
-          <div class="plan-name">Pro</div>
-          <div class="plan-price">R$ 49,90<small>/mês</small></div>
-          <ul class="plan-features">
-            <li>✓ 10 campanhas ativas</li>
-            <li>✓ 5.000 visualizações/mês</li>
-            <li>✓ Detecção avançada de bots</li>
-            <li>✓ Suporte por email</li>
-            <li>✓ IPs de datacenter bloqueados</li>
-          </ul>
-          <button class="btn" onclick="selectPlan('pro')">Assinar Pro</button>
-        </div>
-
-        <div class="plan-card" id="planEnterprise" style="margin-top: 1rem;">
-          <div class="plan-name">Enterprise</div>
-          <div class="plan-price">R$ 199,90<small>/mês</small></div>
-          <ul class="plan-features">
-            <li>✓ Campanhas ilimitadas</li>
-            <li>✓ 50.000 visualizações/mês</li>
-            <li>✓ Detecção com IA</li>
-            <li>✓ Suporte prioritário 24/7</li>
-            <li>✓ API dedicada</li>
-            <li>✓ Onboarding personalizado</li>
-          </ul>
-          <button class="btn" onclick="selectPlan('enterprise')">Assinar Enterprise</button>
-        </div>
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <!-- DASHBOARD SECTION -->
+    <div id="section-dashboard" class="section active">
+      <div class="section-header">
+        <h2>Dashboard</h2>
       </div>
-
-      <!-- FORMULÁRIO DE PAGAMENTO -->
-      <div class="payment-form">
-        <h3>Informações de pagamento</h3>
-        <form id="paymentForm">
-          <div class="form-group">
-            <label>Nome no cartão</label>
-            <input type="text" id="cardName" placeholder="Como está no cartão" required>
-          </div>
-          <div class="form-group">
-            <label>Número do cartão</label>
-            <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div class="form-group">
-              <label>Validade</label>
-              <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
-            </div>
-            <div class="form-group">
-              <label>CVV</label>
-              <input type="text" id="cardCvv" placeholder="123" maxlength="4" required>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>CPF/CNPJ</label>
-            <input type="text" id="document" placeholder="000.000.000-00" required>
-          </div>
-          <div id="selectedPlan" style="margin-top: 1rem; padding: 0.75rem; background: #1a1a1a; border-radius: 12px; text-align: center;">
-            <span style="color: #888">Plano selecionado:</span>
-            <strong id="selectedPlanName">Nenhum</strong>
-          </div>
-          <button type="submit" class="btn" id="submitBtn" disabled>Selecione um plano primeiro</button>
-        </form>
-        <p style="font-size: 0.7rem; color: #444; text-align: center; margin-top: 1rem;">
-          Pagamento processado com segurança. Teste gratuito por 7 dias.
-        </p>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="table-container">
+        <h3 style="padding: 1rem;">Últimas atividades</h3>
+        <table>
+          <thead><tr><th>Data</th><th>IP</th><th>Decisão</th><th>Motivo</th></tr></thead>
+          <tbody id="recentLogs"></tbody>
+        </table>
       </div>
+    </div>
+
+    <!-- CAMPAIGNS SECTION -->
+    <div id="section-campaigns" class="section">
+      <div class="section-header">
+        <h2>Campanhas</h2>
+        <button class="btn btn-primary" onclick="showCreateCampaign()">+ Nova Campanha</button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Nome</th><th>Link Cloaker</th><th>Views</th><th>Bots</th><th>Ações</th></tr></thead>
+          <tbody id="campaignsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LOGS SECTION -->
+    <div id="section-logs" class="section">
+      <div class="section-header">
+        <h2>Histórico de Logs</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead><tr><th>Data</th><th>IP</th><th>User Agent</th><th>Decisão</th><th>Risco</th></tr></thead>
+          <tbody id="fullLogsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BILLING SECTION -->
+    <div id="section-billing" class="section">
+      <div class="section-header">
+        <h2>Planos e Pagamentos</h2>
+      </div>
+      <div class="stats-grid" id="plansGrid"></div>
+      <div style="margin-top: 2rem; text-align: center;">
+        <a href="/payments/index.html" class="btn btn-primary">Ir para página de pagamento →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NOVA CAMPANHA -->
+  <div id="campaignModal" class="modal">
+    <div class="modal-content">
+      <h2 style="margin-bottom: 1rem;">Nova Campanha</h2>
+      <form id="campaignForm">
+        <div class="form-group">
+          <label>Nome da Campanha</label>
+          <input type="text" id="campaignName" required>
+        </div>
+        <div class="form-group">
+          <label>URL Segura (para bots)</label>
+          <input type="url" id="safeUrl" required placeholder="https://exemplo.com/segura">
+        </div>
+        <div class="form-group">
+          <label>URL Real (para humanos)</label>
+          <input type="url" id="realUrl" required placeholder="https://exemplo.com/real">
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1">Criar</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal()" style="flex:1">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 
   <script>
-    let selectedPlanValue = null;
+    let token = localStorage.getItem('token');
+    let user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    function selectPlan(plan) {
-      selectedPlanValue = plan;
-      const planName = plan === 'pro' ? 'Pro - R$ 49,90/mês' : 'Enterprise - R$ 199,90/mês';
-      document.getElementById('selectedPlanName').innerText = planName;
-      document.getElementById('submitBtn').disabled = false;
-      document.getElementById('submitBtn').innerText = `Assinar ${plan === 'pro' ? 'Pro' : 'Enterprise'} - R$ ${plan === 'pro' ? '49,90' : '199,90'}/mês`;
-      
-      // Highlight
-      document.getElementById('planPro').style.borderColor = plan === 'pro' ? '#00ff88' : '#1a1a1a';
-      document.getElementById('planEnterprise').style.borderColor = plan === 'enterprise' ? '#00ff88' : '#1a1a1a';
+    document.getElementById('preloading').style.display = 'none';
+
+    if (!token) {
+      window.location.href = '/login.html';
     }
 
-    // Formatação do cartão
-    document.getElementById('cardNumber').addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\D/g, '');
-      if (value.length > 16) value = value.slice(0, 16);
-      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-      e.target.value = value;
+    document.getElementById('userName').innerText = user.name || user.email;
+    document.getElementById('userEmail').innerText = user.email;
+    document.getElementById('userPlan').innerText = user.plan === 'free' ? 'Free' : (user.plan === 'pro' ? 'Pro' : 'Enterprise');
+    document.getElementById('userCredits').innerHTML = user.credits || 0;
+
+    // SIDEBAR NAVIGATION
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const section = item.dataset.section;
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(`section-${section}`).classList.add('active');
+        if (section === 'dashboard') loadStats();
+        if (section === 'campaigns') loadCampaigns();
+        if (section === 'logs') loadFullLogs();
+        if (section === 'billing') loadPlans();
+      });
     });
 
-    document.getElementById('cardExpiry').addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\D/g, '');
-      if (value.length > 4) value = value.slice(0, 4);
-      if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
-      e.target.value = value;
-    });
-
-    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      if (!selectedPlanValue) {
-        alert('Selecione um plano primeiro');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Faça login primeiro');
+    async function apiCall(endpoint, method, data) {
+      const response = await fetch(endpoint, {
+        method: method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: data ? JSON.stringify(data) : undefined
+      });
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('token');
         window.location.href = '/login.html';
-        return;
+        return null;
       }
+      return response.json();
+    }
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'Processando...';
+    async function loadStats() {
+      const stats = await apiCall('/api/stats', 'GET');
+      if (stats) {
+        document.getElementById('statsGrid').innerHTML = `
+          <div class="card"><div class="card-title">Campanhas</div><div class="card-value">${stats.totalCampaigns || 0}</div></div>
+          <div class="card"><div class="card-title">Visualizações</div><div class="card-value">${stats.totalViews || 0}</div></div>
+          <div class="card"><div class="card-title">Bots Bloqueados</div><div class="card-value">${stats.totalBots || 0}</div></div>
+          <div class="card"><div class="card-title">Taxa de Bloqueio</div><div class="card-value">${stats.blockRate || 0}%</div></div>
+          <div class="card"><div class="card-title">Créditos</div><div class="card-value">${stats.credits || 0}</div><div class="card-sub">restantes</div></div>
+        `;
+        const recentBody = document.getElementById('recentLogs');
+        if (stats.recentLogs && stats.recentLogs.length > 0) {
+          recentBody.innerHTML = stats.recentLogs.slice(0, 10).map(log => `
+            <tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.ip || '-'}</td><td><span class="badge ${log.shouldCloak ? 'badge-danger' : 'badge-success'}">${log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO'}</span></td><td>${log.reason || '-'}</td></tr>
+          `).join('');
+        } else {
+          recentBody.innerHTML = '<tr><td colspan="4">Nenhum log encontrado</td></tr>';
+        }
+      }
+    }
 
-      // Simular processamento de pagamento
-      setTimeout(() => {
-        // Aqui você integraria com Stripe/Asaas/MercadoPago
-        alert(`Pagamento processado com sucesso!\nPlano: ${selectedPlanValue === 'pro' ? 'Pro' : 'Enterprise'}\nSeu plano será atualizado em breve.\nEntre em contato com o suporte para ativação.`);
-        
-        // Atualizar plano no backend (simulado)
-        fetch('/api/update-plan', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ plan: selectedPlanValue })
-        }).catch(console.error);
-        
-        submitBtn.innerText = 'Pagamento processado!';
-        setTimeout(() => {
-          window.location.href = '/dashboard.html';
-        }, 2000);
-      }, 2000);
+    async function loadCampaigns() {
+      const campaigns = await apiCall('/api/campaigns', 'GET');
+      if (campaigns) {
+        const tbody = document.getElementById('campaignsList');
+        if (campaigns.length > 0) {
+          tbody.innerHTML = campaigns.map(c => `
+            <tr>
+              <td>${c.name}</td>
+              <td><code>${c.cloakUrl}</code></td>
+              <td>${c.views || 0}</td>
+              <td>${c.botViews || 0}</td>
+              <td><button class="btn btn-sm btn-outline" onclick="copyLink('${c.cloakUrl}')">Copiar</button> <button class="btn btn-sm btn-danger" onclick="deleteCampaign('${c.id}')">Excluir</button></td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = '<tr><td colspan="5">Nenhuma campanha criada</td></tr>';
+        }
+      }
+    }
+
+    async function loadFullLogs() {
+      const stats = await apiCall('/api/stats', 'GET');
+      if (stats && stats.recentLogs) {
+        const tbody = document.getElementById('fullLogsList');
+        tbody.innerHTML = stats.recentLogs.map(log => `
+          <tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.ip || '-'}</td><td style="max-width:300px;overflow:hidden">${log.userAgent || '-'}</td><td><span class="badge ${log.shouldCloak ? 'badge-danger' : 'badge-success'}">${log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO'}</span></td><td>${log.risk || 0}%</td></tr>
+        `).join('');
+      }
+    }
+
+    async function loadPlans() {
+      const plans = await fetch('/api/plans').then(r => r.json());
+      document.getElementById('plansGrid').innerHTML = plans.map(plan => `
+        <div class="card" style="text-align:center">
+          <div class="card-title">${plan.name}</div>
+          <div class="card-value">R$ ${plan.price}<span style="font-size:0.875rem">/mês</span></div>
+          <div class="card-sub">${plan.credits} créditos/mês</div>
+          <ul style="margin-top:1rem;list-style:none;font-size:0.75rem;color:#666">
+            ${plan.features.map(f => `<li>✓ ${f}</li>`).join('')}
+          </ul>
+          <button class="btn btn-primary btn-sm" style="margin-top:1rem" onclick="window.location.href='/payments/index.html'">Assinar</button>
+        </div>
+      `).join('');
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link);
+      alert('Link copiado!');
+    }
+
+    async function deleteCampaign(id) {
+      if (confirm('Excluir campanha?')) {
+        await apiCall(`/api/campaigns/${id}`, 'DELETE');
+        loadCampaigns();
+        loadStats();
+      }
+    }
+
+    function showCreateCampaign() {
+      document.getElementById('campaignModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('campaignModal').style.display = 'none';
+      document.getElementById('campaignForm').reset();
+    }
+
+    document.getElementById('campaignForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('campaignName').value,
+        safeUrl: document.getElementById('safeUrl').value,
+        realUrl: document.getElementById('realUrl').value
+      };
+      const result = await apiCall('/api/campaigns', 'POST', data);
+      if (result && result.success) {
+        closeModal();
+        loadCampaigns();
+        loadStats();
+        alert('Campanha criada!\nLink: ' + result.campaign.cloakUrl);
+      } else if (result && result.error) {
+        alert(result.error);
+      }
     });
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login.html';
+    }
+
+    loadStats();
+    loadCampaigns();
+    setInterval(() => { if (document.getElementById('section-dashboard').classList.contains('active')) loadStats(); }, 10000);
   </script>
 </body>
 </html>
