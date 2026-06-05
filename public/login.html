@@ -149,16 +149,6 @@
     .hidden {
       display: none;
     }
-
-    .error-message {
-      background: rgba(255, 68, 68, 0.1);
-      border: 1px solid rgba(255, 68, 68, 0.2);
-      color: #ff4444;
-      padding: 0.75rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      margin-bottom: 1rem;
-    }
   </style>
 </head>
 <body>
@@ -178,14 +168,14 @@
           <label>Senha</label>
           <input type="password" id="loginPassword" placeholder="********">
         </div>
-        <button class="btn" onclick="doLogin()">Entrar</button>
+        <button class="btn" id="loginBtn">Entrar</button>
         <div class="divider">
           <span class="divider-line"></span>
           <span>Não tem conta?</span>
           <span class="divider-line"></span>
         </div>
         <div class="text-center">
-          <a class="link" onclick="showRegister()">Criar nova conta</a>
+          <a class="link" id="showRegisterLink">Criar nova conta</a>
         </div>
       </div>
 
@@ -206,31 +196,31 @@
           <label>Confirmar senha</label>
           <input type="password" id="registerConfirmPassword" placeholder="********">
         </div>
-        <button class="btn" onclick="doRegister()">Criar conta</button>
+        <button class="btn" id="registerBtn">Criar conta</button>
         <div class="divider">
           <span class="divider-line"></span>
           <span>Já tem conta?</span>
           <span class="divider-line"></span>
         </div>
         <div class="text-center">
-          <a class="link" onclick="showLogin()">Fazer login</a>
+          <a class="link" id="showLoginLink">Fazer login</a>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    function showRegister() {
+    document.getElementById('showRegisterLink').addEventListener('click', function() {
       document.getElementById('loginForm').classList.add('hidden');
       document.getElementById('registerForm').classList.remove('hidden');
-    }
+    });
 
-    function showLogin() {
+    document.getElementById('showLoginLink').addEventListener('click', function() {
       document.getElementById('registerForm').classList.add('hidden');
       document.getElementById('loginForm').classList.remove('hidden');
-    }
+    });
 
-    async function doLogin() {
+    document.getElementById('loginBtn').addEventListener('click', async function() {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
 
@@ -254,9 +244,9 @@
       } else {
         alert(data.error);
       }
-    }
+    });
 
-    async function doRegister() {
+    document.getElementById('registerBtn').addEventListener('click', async function() {
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
@@ -287,7 +277,7 @@
       } else {
         alert(data.error);
       }
-    }
+    });
   </script>
 </body>
 </html>
