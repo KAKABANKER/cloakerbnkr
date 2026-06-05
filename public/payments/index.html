@@ -1,1 +1,343 @@
+<!DOCTYPE html>
+<html data-version="2026.06.02-11:39">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pagamento | Cloakup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="preload" href="https://rsms.me/inter/inter.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css"></noscript>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: #000;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 1rem 2rem;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo span {
+      color: #00ff88;
+    }
+
+    .back-link {
+      color: #00ff88;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .payment-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plan-card {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .plan-card.featured {
+      border-color: #00ff88;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
+    }
+
+    .plan-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #00ff88;
+      margin: 1rem 0;
+    }
+
+    .plan-price small {
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    .plan-features li {
+      padding: 0.5rem 0;
+      color: #888;
+      font-size: 0.875rem;
+    }
+
+    .payment-form {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 2rem;
+    }
+
+    .payment-form h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #888;
+      font-size: 0.75rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      padding: 0.875rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #00ff88;
+    }
+
+    .btn {
+      width: 100%;
+      background: #00ff88;
+      border: none;
+      color: #000;
+      padding: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #00cc66;
+      transform: translateY(-2px);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      background: rgba(0, 255, 136, 0.1);
+      color: #00ff88;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo">Cloak<span>up</span></div>
+      <a href="/dashboard.html" class="back-link">← Voltar ao Dashboard</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 style="margin-bottom: 0.5rem;">Escolha seu plano</h1>
+    <p style="color: #666; margin-bottom: 2rem;">Assine e proteja seu tráfego com inteligência</p>
+
+    <div class="payment-grid">
+      <!-- PLANOS -->
+      <div>
+        <div class="plan-card" id="planFree">
+          <div class="badge">Atual</div>
+          <div class="plan-name">Free</div>
+          <div class="plan-price">R$ 0<small>/mês</small></div>
+          <ul class="plan-features">
+            <li>✓ 1 campanha ativa</li>
+            <li>✓ 100 visualizações/mês</li>
+            <li>✓ Detecção de bots básica</li>
+          </ul>
+          <button class="btn" disabled style="opacity:0.5">Plano atual</button>
+        </div>
+
+        <div class="plan-card featured" id="planPro" style="margin-top: 1rem;">
+          <div class="badge">Recomendado</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">R$ 49,90<small>/mês</small></div>
+          <ul class="plan-features">
+            <li>✓ 10 campanhas ativas</li>
+            <li>✓ 5.000 visualizações/mês</li>
+            <li>✓ Detecção avançada de bots</li>
+            <li>✓ Suporte por email</li>
+            <li>✓ IPs de datacenter bloqueados</li>
+          </ul>
+          <button class="btn" onclick="selectPlan('pro')">Assinar Pro</button>
+        </div>
+
+        <div class="plan-card" id="planEnterprise" style="margin-top: 1rem;">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price">R$ 199,90<small>/mês</small></div>
+          <ul class="plan-features">
+            <li>✓ Campanhas ilimitadas</li>
+            <li>✓ 50.000 visualizações/mês</li>
+            <li>✓ Detecção com IA</li>
+            <li>✓ Suporte prioritário 24/7</li>
+            <li>✓ API dedicada</li>
+            <li>✓ Onboarding personalizado</li>
+          </ul>
+          <button class="btn" onclick="selectPlan('enterprise')">Assinar Enterprise</button>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DE PAGAMENTO -->
+      <div class="payment-form">
+        <h3>Informações de pagamento</h3>
+        <form id="paymentForm">
+          <div class="form-group">
+            <label>Nome no cartão</label>
+            <input type="text" id="cardName" placeholder="Como está no cartão" required>
+          </div>
+          <div class="form-group">
+            <label>Número do cartão</label>
+            <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Validade</label>
+              <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" id="cardCvv" placeholder="123" maxlength="4" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>CPF/CNPJ</label>
+            <input type="text" id="document" placeholder="000.000.000-00" required>
+          </div>
+          <div id="selectedPlan" style="margin-top: 1rem; padding: 0.75rem; background: #1a1a1a; border-radius: 12px; text-align: center;">
+            <span style="color: #888">Plano selecionado:</span>
+            <strong id="selectedPlanName">Nenhum</strong>
+          </div>
+          <button type="submit" class="btn" id="submitBtn" disabled>Selecione um plano primeiro</button>
+        </form>
+        <p style="font-size: 0.7rem; color: #444; text-align: center; margin-top: 1rem;">
+          Pagamento processado com segurança. Teste gratuito por 7 dias.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedPlanValue = null;
+
+    function selectPlan(plan) {
+      selectedPlanValue = plan;
+      const planName = plan === 'pro' ? 'Pro - R$ 49,90/mês' : 'Enterprise - R$ 199,90/mês';
+      document.getElementById('selectedPlanName').innerText = planName;
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').innerText = `Assinar ${plan === 'pro' ? 'Pro' : 'Enterprise'} - R$ ${plan === 'pro' ? '49,90' : '199,90'}/mês`;
+      
+      // Highlight
+      document.getElementById('planPro').style.borderColor = plan === 'pro' ? '#00ff88' : '#1a1a1a';
+      document.getElementById('planEnterprise').style.borderColor = plan === 'enterprise' ? '#00ff88' : '#1a1a1a';
+    }
+
+    // Formatação do cartão
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 16) value = value.slice(0, 16);
+      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+      e.target.value = value;
+    });
+
+    document.getElementById('cardExpiry').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 4) value = value.slice(0, 4);
+      if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+      e.target.value = value;
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!selectedPlanValue) {
+        alert('Selecione um plano primeiro');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Faça login primeiro');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Processando...';
+
+      // Simular processamento de pagamento
+      setTimeout(() => {
+        // Aqui você integraria com Stripe/Asaas/MercadoPago
+        alert(`Pagamento processado com sucesso!\nPlano: ${selectedPlanValue === 'pro' ? 'Pro' : 'Enterprise'}\nSeu plano será atualizado em breve.\nEntre em contato com o suporte para ativação.`);
+        
+        // Atualizar plano no backend (simulado)
+        fetch('/api/update-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ plan: selectedPlanValue })
+        }).catch(console.error);
+        
+        submitBtn.innerText = 'Pagamento processado!';
+        setTimeout(() => {
+          window.location.href = '/dashboard.html';
+        }, 2000);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
