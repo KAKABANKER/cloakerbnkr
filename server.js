@@ -15,10 +15,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'cloakup_secret_key_2024';
 
 // CONEXÃO POSTGRESQL - COLOQUE SUA STRING AQUI
 const pool = new Pool({
-  connectionString: 'postgresql://cloaker_db_user:kJTmzI74aNVzjvLHetCPFegRbPTTgMAE@dpg-d8hk90a8qa3s73diog4g-a/cloaker_db',
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionString: 'postgresql://cloaker_db_user:kJTmzI74aNVzjvLHetCPFegRbPTTgMAE@dpg-d8hk90a8qa3s73diog4g-a.oregon-postgres.render.com/cloaker_db',
+  ssl: { rejectUnauthorized: false }
 });
 
 app.use(helmet());
