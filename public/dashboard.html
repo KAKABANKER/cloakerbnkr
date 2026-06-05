@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Cloakup</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo">Cloak<span>up</span></div>
+      <div class="nav">
+        <span id="userName"></span>
+        <span id="userCredits"></span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h1>Dashboard</h1>
+      <button class="btn btn-primary" onclick="showCreateCampaign()">Nova Campanha</button>
+    </div>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <h3>Campanhas</h3>
+        <div class="value" id="totalCampaigns">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Visualizacoes</h3>
+        <div class="value" id="totalViews">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Bots Bloqueados</h3>
+        <div class="value" id="totalBots">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Taxa de Bloqueio</h3>
+        <div class="value" id="blockRate">0%</div>
+      </div>
+      <div class="stat-card">
+        <h3>Creditos Restantes</h3>
+        <div class="value" id="creditsLeft">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Plano</h3>
+        <div class="value" id="planName">Free</div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <h3 style="padding: 1rem;">Suas Campanhas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Link Cloaker</th>
+            <th>Visualizacoes</th>
+            <th>Bots</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+        <tbody id="campaignsList"></tbody>
+      </table>
+    </div>
+
+    <div class="table-container" style="margin-top: 2rem;">
+      <h3 style="padding: 1rem;">Ultimos Logs</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>IP</th>
+            <th>Decisao</th>
+            <th>Motivo</th>
+            <th>Risco</th>
+          </tr>
+        </thead>
+        <tbody id="logsList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="campaignModal" class="modal">
+    <div class="modal-content">
+      <h2 style="margin-bottom: 1rem;">Nova Campanha</h2>
+      <form id="campaignForm">
+        <div class="form-group">
+          <label>Nome da Campanha</label>
+          <input type="text" id="campaignName" required>
+        </div>
+        <div class="form-group">
+          <label>URL Segura (para bots)</label>
+          <input type="url" id="safeUrl" required placeholder="https://exemplo.com/pagina-segura">
+        </div>
+        <div class="form-group">
+          <label>URL Real (para humanos)</label>
+          <input type="url" id="realUrl" required placeholder="https://exemplo.com/pagina-real">
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1">Criar</button>
+          <button type="button" class="btn btn-outline" onclick="closeModal()" style="flex:1">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let token = localStorage.getItem('token');
+    let user = JSON.parse(localStorage.getItem('user') || '{}');
+
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    document.getElementById('userName').innerText = user.name || user.email;
+    document.getElementById('userCredits').innerHTML = '<span class="badge badge-success">' + (user.credits || 0) + ' creditos</span>';
+
+    async function apiCall(endpoint, method, data) {
+      const response = await fetch(endpoint, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: data ? JSON.stringify(data) : undefined
+      });
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = '/login.html';
+        return null;
+      }
+
+      return response.json();
+    }
+
+    async function loadStats() {
+      const stats = await apiCall('/api/campaigns/stats', 'GET');
+      if (stats) {
+        document.getElementById('totalCampaigns').innerText = stats.totalCampaigns || 0;
+        document.getElementById('totalViews').innerText = stats.totalViews || 0;
+        document.getElementById('totalBots').innerText = stats.totalBots || 0;
+        document.getElementById('blockRate').innerText = (stats.blockRate || 0) + '%';
+        document.getElementById('creditsLeft').innerText = stats.credits || 0;
+        document.getElementById('planName').innerText = stats.plan === 'free' ? 'Free' : (stats.plan === 'pro' ? 'Pro' : 'Enterprise');
+        
+        const logsBody = document.getElementById('logsList');
+        if (stats.recentLogs) {
+          logsBody.innerHTML = stats.recentLogs.map(function(log) {
+            return '<tr>' +
+              '<td>' + new Date(log.timestamp).toLocaleString() + '</td>' +
+              '<td>' + (log.ip || 'unknown') + '</td>' +
+              '<td><span class="badge ' + (log.shouldCloak ? 'badge-danger' : 'badge-success') + '">' + (log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO') + '</span></td>' +
+              '<td>' + (log.reason || '-') + '</td>' +
+              '<td>' + (log.risk || 0) + '%+' + '</td>' +
+              '</tr>';
+          }).join('');
+        }
+      }
+    }
+
+    async function loadCampaigns() {
+      const campaigns = await apiCall('/api/campaigns', 'GET');
+      if (campaigns) {
+        const tbody = document.getElementById('campaignsList');
+        tbody.innerHTML = campaigns.map(function(c) {
+          return '</tr>' +
+            '<td>' + c.name + '</td>' +
+            '<td><code style="font-size: 12px;">' + c.cloakUrl + '</code></td>' +
+            '<td>' + (c.views || 0) + '</td>' +
+            '<td>' + (c.botViews || 0) + '</td>' +
+            '<td>' +
+              '<button class="btn btn-sm btn-outline" onclick="copyLink(\'' + c.cloakUrl + '\')">Copiar</button> ' +
+              '<button class="btn btn-sm btn-danger" onclick="deleteCampaign(\'' + c.id + '\')">Excluir</button>' +
+            '</td>' +
+            '</tr>';
+        }).join('');
+      }
+    }
+
+    function copyLink(link) {
+      navigator.clipboard.writeText(link);
+      alert('Link copiado!');
+    }
+
+    async function deleteCampaign(id) {
+      if (confirm('Tem certeza que deseja excluir esta campanha?')) {
+        await apiCall('/api/campaigns/' + id, 'DELETE');
+        loadCampaigns();
+        loadStats();
+      }
+    }
+
+    function showCreateCampaign() {
+      document.getElementById('campaignModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('campaignModal').style.display = 'none';
+      document.getElementById('campaignForm').reset();
+    }
+
+    document.getElementById('campaignForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const data = {
+        name: document.getElementById('campaignName').value,
+        safeUrl: document.getElementById('safeUrl').value,
+        realUrl: document.getElementById('realUrl').value
+      };
+      
+      const result = await apiCall('/api/campaigns', 'POST', data);
+      
+      if (result && result.success) {
+        closeModal();
+        loadCampaigns();
+        loadStats();
+        alert('Campanha criada!\nLink: ' + result.campaign.cloakUrl);
+      } else if (result && result.error) {
+        alert(result.error);
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login.html';
+    }
+
+    loadStats();
+    loadCampaigns();
+    setInterval(function() {
+      loadStats();
+    }, 10000);
+  </script>
+</body>
+</html>

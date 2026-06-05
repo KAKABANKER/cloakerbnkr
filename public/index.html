@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloakup - Protecao de Trafego Profissional</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo">Cloak<span>up</span></div>
+      <div class="nav">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="/login.html" class="btn btn-outline">Login</a>
+        <a href="/dashboard.html" class="btn btn-primary">Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Proteja seu <span>trafego</span> com inteligencia</h1>
+    <p>Detecte bots, crawlers e visitantes indesejados em tempo real</p>
+    <a href="/dashboard.html" class="btn btn-primary">Comecar Agora</a>
+  </div>
+
+  <div class="container" id="features">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Por que escolher o Cloakup?</h2>
+    <div class="stats-grid">
+      <div class="card">
+        <h3>Deteccao de Bots</h3>
+        <p>Identifique Googlebot, Bingbot, Facebook e mais de 30 crawlers diferentes com precisao de 98%.</p>
+      </div>
+      <div class="card">
+        <h3>IP de Datacenter</h3>
+        <p>Bloqueie automaticamente visitas de AWS, Google Cloud, Azure e DigitalOcean.</p>
+      </div>
+      <div class="card">
+        <h3>Analise em Tempo Real</h3>
+        <p>Decisoes em milissegundos com cache distribuido e baixa latencia.</p>
+      </div>
+      <div class="card">
+        <h3>Dashboard Completo</h3>
+        <p>Acompanhe estatisticas, logs e gerencie suas campanhas em um so lugar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" id="pricing">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Planos e Precos</h2>
+    <div class="pricing-grid" id="pricingList">
+      <div class="pricing-card">
+        <h3>Carregando...</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Cloakup - Protecao de Trafego Profissional</p>
+  </div>
+
+  <script>
+    fetch('/api/plans')
+      .then(res => res.json())
+      .then(plans => {
+        const container = document.getElementById('pricingList');
+        container.innerHTML = plans.map(plan => `
+          <div class="pricing-card">
+            <h3>${plan.name}</h3>
+            <div class="price">R$ ${plan.price}<small>/mes</small></div>
+            <ul>
+              ${plan.features.map(f => `<li>${f}</li>`).join('')}
+            </ul>
+            <a href="/dashboard.html" class="btn btn-primary">Comecar</a>
+          </div>
+        `).join('');
+      });
+  </script>
+</body>
+</html>

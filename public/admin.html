@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Cloakup</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">Cloak<span>up</span><br><small>Admin Panel</small></div>
+    <div class="nav-item active" onclick="showSection('dashboard')">Dashboard</div>
+    <div class="nav-item" onclick="showSection('users')">Usuarios</div>
+    <div class="nav-item" onclick="showSection('campaigns')">Campanhas</div>
+    <div class="nav-item" onclick="showSection('logs')">Logs</div>
+    <div class="nav-item" onclick="logout()">Sair</div>
+  </div>
+
+  <div class="main-content">
+    <div id="section-dashboard">
+      <h1 style="margin-bottom: 1.5rem;">Dashboard Administrativo</h1>
+      <div class="stats-grid" id="adminStats"></div>
+      <div class="table-container">
+        <h3 style="padding: 1rem;">Ultimos Logs</h3>
+        <table>
+          <thead>
+            <tr><th>Data</th><th>Usuario</th><th>Decisao</th><th>Risco</th></tr>
+          </thead>
+          <tbody id="recentLogs"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="section-users" class="hidden">
+      <h1 style="margin-bottom: 1.5rem;">Usuarios</h1>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Email</th><th>Plano</th><th>Creditos</th><th>Status</th><th>Role</th><th>Acoes</th></tr>
+          </thead>
+          <tbody id="usersList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="section-campaigns" class="hidden">
+      <h1 style="margin-bottom: 1.5rem;">Campanhas</h1>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Nome</th><th>Usuario</th><th>Visualizacoes</th><th>Bots</th></tr>
+          </thead>
+          <tbody id="campaignsList"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="section-logs" class="hidden">
+      <h1 style="margin-bottom: 1.5rem;">Todos os Logs</h1>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>Data</th><th>IP</th><th>Decisao</th><th>Motivo</th><th>Risco</th></tr>
+          </thead>
+          <tbody id="allLogsList"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Editar Usuario</h2>
+      <form id="userForm">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <label>Plano</label>
+          <select id="userPlan">
+            <option value="free">Free</option>
+            <option value="pro">Pro</option>
+            <option value="enterprise">Enterprise</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Creditos</label>
+          <input type="number" id="userCredits">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="userStatus">
+            <option value="active">Ativo</option>
+            <option value="inactive">Inativo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="userRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let token = localStorage.getItem('token');
+
+    if (!token) {
+      window.location.href = '/login.html';
+    }
+
+    async function apiCall(endpoint, method, data) {
+      const response = await fetch(endpoint, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: data ? JSON.stringify(data) : undefined
+      });
+      
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('token');
+        window.location.href = '/login.html';
+        return null;
+      }
+      
+      return response.json();
+    }
+
+    async function loadDashboard() {
+      const stats = await apiCall('/api/admin/stats', 'GET');
+      if (stats) {
+        document.getElementById('adminStats').innerHTML = 
+          '<div class="stat-card"><h3>Usuarios</h3><div class="value">' + stats.totalUsers + '</div></div>' +
+          '<div class="stat-card"><h3>Campanhas</h3><div class="value">' + stats.totalCampaigns + '</div></div>' +
+          '<div class="stat-card"><h3>Logs</h3><div class="value">' + stats.totalLogs + '</div></div>' +
+          '<div class="stat-card"><h3>Visualizacoes</h3><div class="value">' + stats.totalViews + '</div></div>' +
+          '<div class="stat-card"><h3>Bots</h3><div class="value">' + stats.totalBots + '</div></div>' +
+          '<div class="stat-card"><h3>Receita</h3><div class="value">R$ ' + stats.revenue + '</div></div>';
+      }
+      
+      const logs = await apiCall('/api/admin/logs?limit=20', 'GET');
+      if (logs) {
+        const recentLogsHtml = logs.slice(0, 10).map(function(log) {
+          return '<tr>' +
+            '<td>' + new Date(log.timestamp).toLocaleString() + '</td>' +
+            '<td>' + (log.userId ? log.userId.slice(0, 8) : 'N/A') + '</td>' +
+            '<td><span class="badge ' + (log.shouldCloak ? 'badge-danger' : 'badge-success') + '">' + (log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO') + '</span></td>' +
+            '<td>' + (log.risk || 0) + '%+' + '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('recentLogs').innerHTML = recentLogsHtml;
+      }
+    }
+
+    async function loadUsers() {
+      const users = await apiCall('/api/admin/users', 'GET');
+      if (users) {
+        const usersHtml = users.map(function(u) {
+          return '<tr>' +
+            '<td>' + u.name + '</td>' +
+            '<td>' + u.email + '</td>' +
+            '<td>' + u.plan + '</td>' +
+            '<td>' + u.credits + '</td>' +
+            '<td><span class="badge ' + (u.status === 'active' ? 'badge-success' : 'badge-danger') + '">' + u.status + '</span></td>' +
+            '<td>' + u.role + '</td>' +
+            '<td>' +
+              '<button class="btn btn-sm btn-primary" onclick="editUser(\'' + u.id + '\',\'' + u.plan + '\',' + u.credits + ',\'' + u.status + '\',\'' + u.role + '\')">Editar</button> ' +
+              '<button class="btn btn-sm btn-danger" onclick="deleteUser(\'' + u.id + '\')">Excluir</button>' +
+            '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('usersList').innerHTML = usersHtml;
+      }
+    }
+
+    async function loadCampaigns() {
+      const campaigns = await apiCall('/api/admin/campaigns', 'GET');
+      if (campaigns) {
+        const campaignsHtml = campaigns.map(function(c) {
+          return '<tr>' +
+            '<td>' + c.name + '</td>' +
+            '<td>' + (c.userEmail || 'N/A') + '</td>' +
+            '<td>' + (c.views || 0) + '</td>' +
+            '<td>' + (c.botViews || 0) + '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('campaignsList').innerHTML = campaignsHtml;
+      }
+    }
+
+    async function loadAllLogs() {
+      const logs = await apiCall('/api/admin/logs?limit=200', 'GET');
+      if (logs) {
+        const allLogsHtml = logs.map(function(log) {
+          return '<tr>' +
+            '<td>' + new Date(log.timestamp).toLocaleString() + '</td>' +
+            '<td>' + (log.ip || 'N/A') + '</td>' +
+            '<td><span class="badge ' + (log.shouldCloak ? 'badge-danger' : 'badge-success') + '">' + (log.shouldCloak ? 'BLOQUEADO' : 'LIBERADO') + '</span></td>' +
+            '<td>' + (log.reason || 'N/A') + '</td>' +
+            '<td>' + (log.risk || 0) + '%+' + '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('allLogsList').innerHTML = allLogsHtml;
+      }
+    }
+
+    function editUser(id, plan, credits, status, role) {
+      document.getElementById('userId').value = id;
+      document.getElementById('userPlan').value = plan;
+      document.getElementById('userCredits').value = credits;
+      document.getElementById('userStatus').value = status;
+      document.getElementById('userRole').value = role;
+      document.getElementById('userModal').style.display = 'flex';
+    }
+
+    async function deleteUser(id) {
+      if (confirm('Deletar usuario?')) {
+        await apiCall('/api/admin/users/' + id, 'DELETE');
+        loadUsers();
+        loadDashboard();
+      }
+    }
+
+    document.getElementById('userForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      await apiCall('/api/admin/users/' + document.getElementById('userId').value, 'PUT', {
+        plan: document.getElementById('userPlan').value,
+        credits: parseInt(document.getElementById('userCredits').value),
+        status: document.getElementById('userStatus').value,
+        role: document.getElementById('userRole').value
+      });
+      document.getElementById('userModal').style.display = 'none';
+      loadUsers();
+      loadDashboard();
+    });
+
+    function showSection(section) {
+      document.getElementById('section-dashboard').classList.add('hidden');
+      document.getElementById('section-users').classList.add('hidden');
+      document.getElementById('section-campaigns').classList.add('hidden');
+      document.getElementById('section-logs').classList.add('hidden');
+      
+      document.getElementById('section-' + section).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-item').forEach(function(item) {
+        item.classList.remove('active');
+      });
+      event.target.closest('.nav-item').classList.add('active');
+      
+      if (section === 'dashboard') loadDashboard();
+      if (section === 'users') loadUsers();
+      if (section === 'campaigns') loadCampaigns();
+      if (section === 'logs') loadAllLogs();
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = '/login.html';
+    }
+
+    loadDashboard();
+    setInterval(function() {
+      if (document.getElementById('section-dashboard').classList.contains('hidden') === false) {
+        loadDashboard();
+      }
+    }, 10000);
+  </script>
+</body>
+</html>

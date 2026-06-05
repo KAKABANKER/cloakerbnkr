@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Cloakup</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>Cloak<span style="color:#00ff88">up</span></h2>
+      
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="loginPassword" placeholder="********">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Entrar</button>
+        <p style="text-align:center;margin-top:1rem;font-size:0.875rem">
+          Nao tem conta? <a class="link" onclick="showRegister()">Registre-se</a>
+        </p>
+      </div>
+
+      <div id="registerForm" class="hidden">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="registerName" placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="registerEmail" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="registerPassword" placeholder="********">
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="doRegister()">Registrar</button>
+        <p style="text-align:center;margin-top:1rem;font-size:0.875rem">
+          Ja tem conta? <a class="link" onclick="showLogin()">Fazer login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showRegister() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.remove('hidden');
+    }
+
+    function showLogin() {
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = '/dashboard.html';
+      } else {
+        alert(data.error);
+      }
+    }
+
+    async function doRegister() {
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        window.location.href = '/dashboard.html';
+      } else {
+        alert(data.error);
+      }
+    }
+  </script>
+</body>
+</html>
