@@ -13,19 +13,22 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'cloakup_secret_key_2024';
 
-// ADICIONE ESTA LINHA (resolve o erro do X-Forwarded-For)
+// TRUST PROXY para o Render
 app.set('trust proxy', 1);
 
-// Ajuste o helmet para permitir inline scripts
+// HELMET CONFIGURADO CORRETAMENTE
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://accounts.google.com", "https://js.stripe.com"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://rsms.me"],
+      styleSrcElem: ["'self'", "'unsafe-inline'", "https://rsms.me"],
+      fontSrc: ["'self'", "https://rsms.me", "data:"],
       imgSrc: ["'self'", "data:", "https:"],
       connectSrc: ["'self'"],
-      fontSrc: ["'self'"],
+      frameSrc: ["'self'", "https://js.stripe.com"],
       objectSrc: ["'none'"],
     },
   },
@@ -413,7 +416,7 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
     const user = userResult.rows[0];
     
     const logsResult = await pool.query(
-      'SELECT timestamp, ip, should_cloak, risk, reason FROM logs WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 20',
+      'SELECT timestamp, ip, user_agent, should_cloak, risk, reason FROM logs WHERE user_id = $1 ORDER BY timestamp DESC LIMIT 20',
       [req.user.id]
     );
     
@@ -430,6 +433,7 @@ app.get('/api/stats', authenticateToken, async (req, res) => {
       recentLogs: logsResult.rows.map(l => ({
         timestamp: l.timestamp,
         ip: l.ip,
+        userAgent: l.user_agent,
         shouldCloak: l.should_cloak,
         risk: l.risk,
         reason: l.reason
@@ -551,6 +555,32 @@ app.get('/api/plans', (req, res) => {
     { id: 'pro', name: 'Pro', price: 49.90, credits: 5000, features: ['10 campaigns', '5000 views/month', 'Email support'] },
     { id: 'enterprise', name: 'Enterprise', price: 199.90, credits: 50000, features: ['Unlimited campaigns', '50000 views/month', 'Priority support', 'API access'] }
   ]);
+});
+
+// UPDATE PLAN (para pagamento)
+app.post('/api/update-plan', authenticateToken, async (req, res) => {
+  const { plan } = req.body;
+  
+  if (!plan || !['pro', 'enterprise'].includes(plan)) {
+    return res.status(400).json({ error: 'Invalid plan' });
+  }
+  
+  try {
+    let credits = plan === 'pro' ? 5000 : 50000;
+    await pool.query('UPDATE users SET plan = $1, credits = $2 WHERE id = $3', [plan, credits, req.user.id]);
+    
+    // Atualizar o token com novo plano
+    const newToken = jwt.sign(
+      { id: req.user.id, email: req.user.email, role: req.user.role, plan: plan },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    
+    res.json({ success: true, token: newToken, plan: plan, credits: credits });
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // ROOT
