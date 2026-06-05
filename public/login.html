@@ -1,15 +1,173 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html data-version="2026.06.02-11:39">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Cloakup</title>
-  <link rel="stylesheet" href="/style.css">
+  <meta charset="UTF-8" />
+  <title>Login | Cloakup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://rsms.me/">
+  <link rel="preload" href="https://rsms.me/inter/inter.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://rsms.me/inter/inter.css"></noscript>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    .login-box {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #666);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .logo span {
+      color: #00ff88;
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    .logo p {
+      color: #666;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #888;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      padding: 0.875rem 1rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #00ff88;
+      box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      background: #00ff88;
+      border: none;
+      color: #000;
+      padding: 0.875rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #00cc66;
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: #444;
+      font-size: 0.75rem;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: #1a1a1a;
+    }
+
+    .link {
+      color: #00ff88;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error-message {
+      background: rgba(255, 68, 68, 0.1);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
     <div class="login-box">
-      <h2>Cloak<span style="color:#00ff88">up</span></h2>
+      <div class="logo">
+        <h1>Cloak<span>up</span></h1>
+        <p>Proteção de tráfego profissional</p>
+      </div>
       
       <div id="loginForm">
         <div class="form-group">
@@ -20,15 +178,20 @@
           <label>Senha</label>
           <input type="password" id="loginPassword" placeholder="********">
         </div>
-        <button class="btn btn-primary" style="width:100%" onclick="doLogin()">Entrar</button>
-        <p style="text-align:center;margin-top:1rem;font-size:0.875rem">
-          Nao tem conta? <a class="link" onclick="showRegister()">Registre-se</a>
-        </p>
+        <button class="btn" onclick="doLogin()">Entrar</button>
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span>Não tem conta?</span>
+          <span class="divider-line"></span>
+        </div>
+        <div class="text-center">
+          <a class="link" onclick="showRegister()">Criar nova conta</a>
+        </div>
       </div>
 
       <div id="registerForm" class="hidden">
         <div class="form-group">
-          <label>Nome</label>
+          <label>Nome completo</label>
           <input type="text" id="registerName" placeholder="Seu nome">
         </div>
         <div class="form-group">
@@ -39,10 +202,19 @@
           <label>Senha</label>
           <input type="password" id="registerPassword" placeholder="********">
         </div>
-        <button class="btn btn-primary" style="width:100%" onclick="doRegister()">Registrar</button>
-        <p style="text-align:center;margin-top:1rem;font-size:0.875rem">
-          Ja tem conta? <a class="link" onclick="showLogin()">Fazer login</a>
-        </p>
+        <div class="form-group">
+          <label>Confirmar senha</label>
+          <input type="password" id="registerConfirmPassword" placeholder="********">
+        </div>
+        <button class="btn" onclick="doRegister()">Criar conta</button>
+        <div class="divider">
+          <span class="divider-line"></span>
+          <span>Já tem conta?</span>
+          <span class="divider-line"></span>
+        </div>
+        <div class="text-center">
+          <a class="link" onclick="showLogin()">Fazer login</a>
+        </div>
       </div>
     </div>
   </div>
@@ -61,6 +233,11 @@
     async function doLogin() {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        alert('Preencha todos os campos');
+        return;
+      }
 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -83,6 +260,17 @@
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+      if (!email || !password) {
+        alert('Preencha todos os campos');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert('As senhas não coincidem');
+        return;
+      }
 
       const response = await fetch('/api/auth/register', {
         method: 'POST',
